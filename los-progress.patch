@@ -1,0 +1,66 @@
+
+project build/soong/
+diff --git a/ui/build/rbe.go b/ui/build/rbe.go
+index 8f9a69991..3241ca296 100644
+--- a/ui/build/rbe.go
++++ b/ui/build/rbe.go
+@@ -122,7 +122,7 @@ func stopRBE(ctx Context, config Config) {
+ 	cmd := Command(ctx, config, "stopRBE bootstrap", rbeCommand(ctx, config, bootstrapCmd), "-shutdown")
+ 	output, err := cmd.CombinedOutput()
+ 	if err != nil {
+-		ctx.Fatalf("rbe bootstrap with shutdown failed with: %v\n%s\n", err, output)
++		ctx.Fatalf("soong bootstrap with shutdown failed with: %v\n%s\n", err, output)
+ 	}
+ 
+ 	if !config.Environment().IsEnvTrue("ANDROID_QUIET_BUILD") && len(output) > 0 {
+
+project device/xiaomi/mido/
+diff --git a/BoardConfig.mk b/BoardConfig.mk
+index 73762df..1f977b6 100644
+--- a/BoardConfig.mk
++++ b/BoardConfig.mk
+@@ -45,7 +45,7 @@ TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop
+ TARGET_VENDOR_PROP := $(DEVICE_PATH)/vendor.prop
+ 
+ # Kernel
+-TARGET_KERNEL_CONFIG := vendor/mido-perf_defconfig
++TARGET_KERNEL_CONFIG := vendor/msm8953-mido_defconfig
+ BOARD_KERNEL_BASE := 0x80000000
+ BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000 loop.max_part=16 androidboot.usbconfigfs=true cgroup_disable=pressure
+ BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+diff --git a/sepolicy/vendor/file.te b/sepolicy/vendor/file.te
+index 8f9f4ac..8452c31 100644
+--- a/sepolicy/vendor/file.te
++++ b/sepolicy/vendor/file.te
+@@ -2,7 +2,6 @@
+ type camera_socket, file_type, data_file_type;
+ 
+ # DebugFS
+-type qti_debugfs, fs_type, debugfs_type;
+ 
+ # Fingerprint
+ type fpc_data_file, file_type, data_file_type, core_data_file_type;
+
+project hardware/mithorium/audio/LA.UM.9.6.4.r2-04300-89xx.QSSI13r2.0/hal/
+diff --git a/hal/audio_extn/spkr_protection.c b/hal/audio_extn/spkr_protection.c
+index e043776..33ee499 100644
+--- a/hal/audio_extn/spkr_protection.c
++++ b/hal/audio_extn/spkr_protection.c
+@@ -1170,7 +1170,7 @@ static void spkr_calibrate_wait()
+     pthread_mutex_unlock(&handle.cal_wait_cond_mutex);
+ }
+ 
+-static void* spkr_calibration_thread(void *arg)
++static void* spkr_calibration_thread(void *arg __attribute__((unused)))
+ {
+     unsigned long sec = 0;
+     int t0;
+@@ -1953,7 +1953,7 @@ static int get_spkr_prot_v_vali_param(int cal_fd __unused, int *status __unused,
+ }
+ #endif
+ 
+-static void* spkr_v_vali_thread(void *arg)
++static void* spkr_v_vali_thread(void *arg __attribute__((unused)))
+ {
+     int ret = 0;
+     struct audio_device *adev = handle.adev_handle;
